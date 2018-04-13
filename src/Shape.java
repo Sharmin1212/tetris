@@ -25,13 +25,21 @@ public class Shape {
 
     public Shape(Tetrominoes pieceShape) {
         this.pieceShape = pieceShape;
-        coordinates = coordsTable[pieceShape.ordinal()];
+        coordinates = new int[4][2];
+        for (int point = 0; point < coordinates.length; point++) {
+                    coordinates[point][0] = coordsTable[pieceShape.ordinal()][point][0];
+                    coordinates[point][1] = coordsTable[pieceShape.ordinal()][point][1];
+        }
     }
 
     public Shape() {
         int randomNumber = (int) (Math.random() * 7 + 1);
         pieceShape = Tetrominoes.values()[randomNumber];
-        coordinates = coordsTable[randomNumber];
+        coordinates = new int[4][2];
+        for (int point = 0; point < coordinates.length; point++) {
+                    coordinates[point][0] = coordsTable[randomNumber][point][0];
+                    coordinates[point][1] = coordsTable[randomNumber][point][1];
+        }
     }
 
     public static Shape getRandomShape() {
@@ -44,6 +52,22 @@ public class Shape {
 
     public Tetrominoes getShape() {
         return pieceShape;
+    }
+
+    public Shape rotateRight() {
+        Shape rotatedShape = new Shape(pieceShape);
+        for (int point = 0; point < rotatedShape.coordinates.length; point++) {
+            rotatedShape.coordinates[point][0] = coordinates[point][0];
+            rotatedShape.coordinates[point][1] = coordinates[point][1];
+        }
+        if (pieceShape != Tetrominoes.SquareShape) {
+            for (int point = 0; point < rotatedShape.coordinates.length; point++) {
+                int temp = rotatedShape.coordinates[point][0];
+                rotatedShape.coordinates[point][0] = rotatedShape.coordinates[point][1];
+                rotatedShape.coordinates[point][1] = -temp;
+            }
+        }
+        return rotatedShape;
     }
 
     public int getXmin() {
@@ -77,7 +101,7 @@ public class Shape {
     }
 
     public int getYmax() {
-                int candidate = coordinates[0][1];
+        int candidate = coordinates[0][1];
         for (int i = 1; i < coordinates.length; i++) {
             if (coordinates[i][1] > candidate) {
                 candidate = coordinates[i][1];
