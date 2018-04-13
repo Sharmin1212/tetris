@@ -41,12 +41,17 @@ public class Board extends JPanel implements ActionListener {
 
                     }
                     break;
+                    case KeyEvent.VK_P:
+                    
+                    break;
                 default:
                     break;
             }
             repaint();
         }
     }
+
+    public ScoreBoard scoreBoard;
 
     public static final int NUM_ROWS = 22;
     public static final int NUM_COLS = 10;
@@ -104,7 +109,7 @@ public class Board extends JPanel implements ActionListener {
         return true;
     }
 
-    private boolean hitWithMatrix(Shape shape,int row, int col) {
+    private boolean hitWithMatrix(Shape shape, int row, int col) {
         int[][] squaresArray = shape.getCoordinates();
         for (int point = 0; point <= 3; point++) {
             int hRow = row + squaresArray[point][1];
@@ -126,6 +131,7 @@ public class Board extends JPanel implements ActionListener {
             repaint();
         } else {
             moveCurrentShapeToMatrix();
+            checkRows();
             currentShape = new Shape();
             currentRow = INIT_ROW;
             currentCol = NUM_COLS / 2;
@@ -205,4 +211,31 @@ public class Board extends JPanel implements ActionListener {
 
         }
     }
+
+    public void checkRows() {
+        for (int i = 0; i < NUM_ROWS; i++) {
+            int counter = 0;
+            for (int j = 0; j < NUM_COLS; j++) {
+                if (matrix[i][j] != Tetrominoes.NoShape) {
+                    counter++;
+                }
+                if (counter == 10) {
+                    scoreBoard.increment(100);
+                    for (int k = i; k > 0; k--) {
+                        for (int l = 0; l < NUM_COLS; l++) {
+                            matrix[k][l] = matrix[k - 1][l];
+                        }
+                    }
+                    for (int k = 0; k < NUM_COLS; k++) {
+                        matrix[0][k] = Tetrominoes.NoShape;
+                    }
+                }
+            }
+        }
+    }
+
+    public void setScoreboard(ScoreBoard scoreboard) {
+        this.scoreBoard = scoreboard;
+    }
+
 }
