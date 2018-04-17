@@ -25,29 +25,44 @@ public class Board extends JPanel implements ActionListener {
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_LEFT:
-                    if (canMoveTo(currentShape, currentRow, currentCol - 1)) {
-                        currentCol--;
+                    if (timer.isRunning()) {
+                        if (canMoveTo(currentShape, currentRow, currentCol - 1)) {
+                            currentCol--;
+                        }
                     }
                     break;
                 case KeyEvent.VK_RIGHT:
-                    if (canMoveTo(currentShape, currentRow, currentCol + 1)) {
-                        currentCol++;
+                    if (timer.isRunning()) {
+                        if (canMoveTo(currentShape, currentRow, currentCol + 1)) {
+                            currentCol++;
+                        }
                     }
                     break;
                 case KeyEvent.VK_UP:
-                    Shape rotShape = currentShape.rotateRight();
-                    if (canMoveTo(rotShape, currentRow, currentCol)) {
-                        currentShape = rotShape;
+                    if (timer.isRunning()) {
+                        Shape rotShape = currentShape.rotateRight();
+                        if (canMoveTo(rotShape, currentRow, currentCol)) {
+                            currentShape = rotShape;
+                        }
                     }
                     break;
                 case KeyEvent.VK_DOWN:
-                    if (canMoveTo(currentShape, currentRow + 1, currentCol)) {
-                        currentRow++;
-
+                    if (timer.isRunning()) {
+                        if (canMoveTo(currentShape, currentRow + 1, currentCol)) {
+                            currentRow++;
+                        }
                     }
                     break;
                 case KeyEvent.VK_P:
-
+                    if (!gameOver) {
+                        if (timer.isRunning()) {
+                            timer.stop();
+                            AudioPlayer.player.stop(audios);
+                        } else {
+                            timer.start();
+                            AudioPlayer.player.start(audios);
+                        }
+                    }
                     break;
                 default:
                     break;
@@ -70,8 +85,10 @@ public class Board extends JPanel implements ActionListener {
 
     private Timer timer;
 
+    boolean gameOver = false;
+
     MyKeyAdapter keyAdepter;
-    
+
     AudioStream audios = null;
 
     public static final int INIT_ROW = -2;
@@ -101,6 +118,7 @@ public class Board extends JPanel implements ActionListener {
         currentShape = new Shape();
         timer.start();
         addKeyListener(keyAdepter);
+        gameOver = false;
 
         playSong();
 
@@ -142,11 +160,17 @@ public class Board extends JPanel implements ActionListener {
             currentRow++;
             repaint();
         } else {
-            moveCurrentShapeToMatrix();
-            checkRows();
-            currentShape = new Shape();
-            currentRow = INIT_ROW;
-            currentCol = NUM_COLS / 2;
+            if (currentShape.getYmin() + currentRow < 0) {
+                gameOver();
+                timer.stop();
+            } else {
+                moveCurrentShapeToMatrix();
+                checkRows();
+                currentShape = new Shape();
+                currentRow = INIT_ROW;
+                currentCol = NUM_COLS / 2;
+            }
+
         }
     }
 
@@ -259,12 +283,23 @@ public class Board extends JPanel implements ActionListener {
     public void playSong() {
         InputStream music;
         try {
-            music = new FileInputStream(new File("tetris.wav"));
+            music = new FileInputStream(new File("tetris.wv"));
             audios = new AudioStream(music);
             AudioPlayer.player.start(audios);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getLocalizedMessage());
         }
     }
-}
 
+    public void gameOver() {
+        for (int row = 0; row < NUM_ROWS; row++) {
+            for (int col = 0; col < NUM_COLS; col++) {
+                matrix[row][col] = Tetrominoes.ZShape;
+            }
+            currentShape = null;
+            AudioPlayer.player.stop(audios);
+            gameOver = true;
+        }
+
+    }
+}
