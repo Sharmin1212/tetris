@@ -1,7 +1,12 @@
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
 import javax.swing.*;
+import sun.audio.*;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -41,8 +46,8 @@ public class Board extends JPanel implements ActionListener {
 
                     }
                     break;
-                    case KeyEvent.VK_P:
-                    
+                case KeyEvent.VK_P:
+
                     break;
                 default:
                     break;
@@ -66,6 +71,8 @@ public class Board extends JPanel implements ActionListener {
     private Timer timer;
 
     MyKeyAdapter keyAdepter;
+    
+    AudioStream audios = null;
 
     public static final int INIT_ROW = -2;
 
@@ -87,11 +94,16 @@ public class Board extends JPanel implements ActionListener {
     }
 
     public void initGame() {
+        AudioPlayer.player.stop(audios);
         removeKeyListener(keyAdepter);
         initValues();
+        timer.setDelay(deltaTime);
         currentShape = new Shape();
         timer.start();
         addKeyListener(keyAdepter);
+
+        playSong();
+
     }
 
     public void cleanBoard() {
@@ -220,7 +232,13 @@ public class Board extends JPanel implements ActionListener {
                     counter++;
                 }
                 if (counter == 10) {
+
                     scoreBoard.increment(100);
+                    if (scoreBoard.getScore() % 500 == 0 && deltaTime > 100) {
+                        deltaTime = deltaTime - 100;
+                        timer.setDelay(deltaTime);
+                    }
+
                     for (int k = i; k > 0; k--) {
                         for (int l = 0; l < NUM_COLS; l++) {
                             matrix[k][l] = matrix[k - 1][l];
@@ -238,4 +256,15 @@ public class Board extends JPanel implements ActionListener {
         this.scoreBoard = scoreboard;
     }
 
+    public void playSong() {
+        InputStream music;
+        try {
+            music = new FileInputStream(new File("tetris.wav"));
+            audios = new AudioStream(music);
+            AudioPlayer.player.start(audios);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getLocalizedMessage());
+        }
+    }
 }
+
