@@ -283,7 +283,7 @@ public class Board extends JPanel implements ActionListener {
     public void playSong() {
         InputStream music;
         try {
-            music = new FileInputStream(new File("tetris.wv"));
+            music = new FileInputStream(new File("tetris.wav"));
             audios = new AudioStream(music);
             AudioPlayer.player.start(audios);
         } catch (Exception e) {
