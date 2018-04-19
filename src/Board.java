@@ -1,3 +1,4 @@
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -73,6 +74,7 @@ public class Board extends JPanel implements ActionListener {
     }
 
     public ScoreBoard scoreBoard;
+    private NextPiecePanel nextPiecePanel;
 
     public static final int NUM_ROWS = 22;
     public static final int NUM_COLS = 10;
@@ -101,6 +103,11 @@ public class Board extends JPanel implements ActionListener {
         timer = new Timer(deltaTime, this);
         keyAdepter = new MyKeyAdapter();
     }
+    
+    public void setNextPiecePanel(NextPiecePanel p){
+        nextPiecePanel = p;
+    }
+
 
     public void initValues() {
         setFocusable(true);
@@ -116,7 +123,8 @@ public class Board extends JPanel implements ActionListener {
         removeKeyListener(keyAdepter);
         initValues();
         timer.setDelay(deltaTime);
-        currentShape = new Shape();
+        nextPiecePanel.generateNewShape();
+        currentShape = Shape.getRandomShape();
         timer.start();
         addKeyListener(keyAdepter);
         gameOver = false;
@@ -167,7 +175,8 @@ public class Board extends JPanel implements ActionListener {
             } else {
                 moveCurrentShapeToMatrix();
                 checkRows();
-                currentShape = new Shape();
+                currentShape = nextPiecePanel.getShape();
+                nextPiecePanel.generateNewShape();
                 currentRow = INIT_ROW;
                 currentCol = NUM_COLS / 2;
             }
@@ -190,7 +199,7 @@ public class Board extends JPanel implements ActionListener {
         super.paintComponent(g);
         drawBoard(g);
         if (currentShape != null) {
-            drawCurrentShape(g);
+            currentShape.draw(g, currentRow, currentCol, squareWidth(), squareHeight());
         }
 
         drawBoarder(g);
@@ -204,33 +213,9 @@ public class Board extends JPanel implements ActionListener {
     public void drawBoard(Graphics g) {
         for (int row = 0; row < NUM_ROWS; row++) {
             for (int col = 0; col < NUM_COLS; col++) {
-                drawSquare(g, row, col, matrix[row][col]);
+                Util.drawSquare(g, row, col, matrix[row][col], squareWidth(), squareHeight());
             }
         }
-    }
-
-    private void drawSquare(Graphics g, int row, int col, Tetrominoes shape) {
-        Color colors[] = {new Color(0, 0, 0),
-            new Color(204, 102, 102),
-            new Color(102, 204, 102), new Color(102, 102, 204),
-            new Color(204, 204, 102), new Color(204, 102, 204),
-            new Color(102, 204, 204), new Color(218, 170, 0)
-        };
-        int x = col * squareWidth();
-        int y = row * squareHeight();
-        Color color = colors[shape.ordinal()];
-        g.setColor(color);
-        g.fillRect(x + 1, y + 1, squareWidth() - 2,
-                squareHeight() - 2);
-        g.setColor(color.brighter());
-        g.drawLine(x, y + squareHeight() - 1, x, y);
-        g.drawLine(x, y, x + squareWidth() - 1, y);
-        g.setColor(color.darker());
-        g.drawLine(x + 1, y + squareHeight() - 1,
-                x + squareWidth() - 1, y + squareHeight() - 1);
-        g.drawLine(x + squareWidth() - 1,
-                y + squareHeight() - 1,
-                x + squareWidth() - 1, y + 1);
     }
 
     private int squareWidth() {
@@ -239,14 +224,6 @@ public class Board extends JPanel implements ActionListener {
 
     private int squareHeight() {
         return getHeight() / NUM_ROWS;
-    }
-
-    private void drawCurrentShape(Graphics g) {
-        int[][] squaresArray = currentShape.getCoordinates();
-        for (int point = 0; point <= 3; point++) {
-            drawSquare(g, currentRow + squaresArray[point][1], currentCol + squaresArray[point][0], currentShape.getShape());
-
-        }
     }
 
     public void checkRows() {
