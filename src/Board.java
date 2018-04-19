@@ -1,4 +1,3 @@
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -58,9 +57,11 @@ public class Board extends JPanel implements ActionListener {
                         if (timer.isRunning()) {
                             timer.stop();
                             AudioPlayer.player.stop(audios);
+                            scoreBoard.paused();
                         } else {
                             timer.start();
                             AudioPlayer.player.start(audios);
+                            scoreBoard.resume();
                         }
                     }
                     break;
@@ -300,6 +301,7 @@ public class Board extends JPanel implements ActionListener {
             AudioPlayer.player.stop(audios);
             gameOver = true;
         }
+        scoreBoard.gameOver();
 
     }
 }

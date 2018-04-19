@@ -35,4 +35,17 @@ public class ScoreBoard extends JLabel {
     public int getScore() {
         return this.score;
     }
+
+    public void paused() {
+        setText("PAUSED");
+    }
+
+    public void resume() {
+        setText("Score: " + score);
+    }
+
+    public void gameOver() {
+        setText("GAME OVER");
+    }
+
 }
