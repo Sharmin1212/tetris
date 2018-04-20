@@ -68,7 +68,9 @@ public class Board extends JPanel implements ActionListener {
                     break;
                 case KeyEvent.VK_SPACE:
                     if (timer.isRunning()) {
-                        
+                        while (canMoveTo(currentShape, currentRow + 1, currentCol)) {
+                            currentRow++;
+                        }
                     }
                     break;
                 default:
@@ -108,11 +110,10 @@ public class Board extends JPanel implements ActionListener {
         timer = new Timer(deltaTime, this);
         keyAdepter = new MyKeyAdapter();
     }
-    
-    public void setNextPiecePanel(NextPiecePanel p){
+
+    public void setNextPiecePanel(NextPiecePanel p) {
         nextPiecePanel = p;
     }
-
 
     public void initValues() {
         setFocusable(true);
@@ -133,7 +134,6 @@ public class Board extends JPanel implements ActionListener {
         timer.start();
         addKeyListener(keyAdepter);
         gameOver = false;
-        
 
         playSong();
 
