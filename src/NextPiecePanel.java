@@ -15,6 +15,8 @@ import javax.swing.JPanel;
 public class NextPiecePanel extends JPanel {
 
     private Shape shape;
+    private Tetrominoes[][] matrixNextPiece;
+    public static final int NUM_ROWS_COLS = 4;
 
     /**
      * Creates new form NextPiecePanel
@@ -30,6 +32,7 @@ public class NextPiecePanel extends JPanel {
         if (shape != null) {
             shape.draw(g, 1, 1, squareWidth(), squareHeight());
         }
+        drawBorder(g);
     }
 
     public Shape getShape() {
@@ -39,15 +42,20 @@ public class NextPiecePanel extends JPanel {
     public void generateNewShape() {
         shape = Shape.getRandomShape();
         repaint();
-
     }
 
     private int squareWidth() {
-        return getWidth() / 4;
+        return getWidth() / NUM_ROWS_COLS;
     }
 
     private int squareHeight() {
-        return getHeight() / 4;
+        return getHeight() / NUM_ROWS_COLS;
+    }
+
+   
+    public void drawBorder(Graphics g) {
+        g.setColor(Color.red);
+        g.drawRect(0, 0, NUM_ROWS_COLS * squareWidth(), NUM_ROWS_COLS * squareHeight());
     }
 
     /**
@@ -58,6 +66,8 @@ public class NextPiecePanel extends JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+
+        setBackground(new java.awt.Color(0, 0, 0));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

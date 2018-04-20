@@ -66,6 +66,11 @@ public class Board extends JPanel implements ActionListener {
                         }
                     }
                     break;
+                case KeyEvent.VK_SPACE:
+                    if (timer.isRunning()) {
+                        
+                    }
+                    break;
                 default:
                     break;
             }
@@ -128,6 +133,7 @@ public class Board extends JPanel implements ActionListener {
         timer.start();
         addKeyListener(keyAdepter);
         gameOver = false;
+        
 
         playSong();
 
