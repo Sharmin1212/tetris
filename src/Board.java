@@ -100,6 +100,7 @@ public class Board extends JPanel implements ActionListener {
     MyKeyAdapter keyAdepter;
 
     AudioStream audios = null;
+    AudioStream audioEf = null;
 
     public static final int INIT_ROW = -2;
 
@@ -135,7 +136,7 @@ public class Board extends JPanel implements ActionListener {
         addKeyListener(keyAdepter);
         gameOver = false;
 
-        playSong();
+        playSong("tetris.wav");
 
     }
 
@@ -240,7 +241,7 @@ public class Board extends JPanel implements ActionListener {
                     counter++;
                 }
                 if (counter == 10) {
-
+                    playEffect("LineEffect.wav");
                     scoreBoard.increment(100);
                     if (scoreBoard.getScore() % 500 == 0 && deltaTime > 100) {
                         deltaTime = deltaTime - 100;
@@ -264,12 +265,23 @@ public class Board extends JPanel implements ActionListener {
         this.scoreBoard = scoreboard;
     }
 
-    public void playSong() {
+    public void playSong(String song) {
         InputStream music;
         try {
-            music = new FileInputStream(new File("tetris.wav"));
+            music = new FileInputStream(new File(song));
             audios = new AudioStream(music);
             AudioPlayer.player.start(audios);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getLocalizedMessage());
+        }
+    }
+
+    public void playEffect(String effect) {
+        InputStream music;
+        try {
+            music = new FileInputStream(new File(effect));
+            audioEf = new AudioStream(music);
+            AudioPlayer.player.start(audioEf);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getLocalizedMessage());
         }
@@ -282,6 +294,7 @@ public class Board extends JPanel implements ActionListener {
             }
             currentShape = null;
             AudioPlayer.player.stop(audios);
+            playSong("GameOver.wav");
             gameOver = true;
         }
         scoreBoard.gameOver();
