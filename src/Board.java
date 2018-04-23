@@ -106,7 +106,7 @@ public class Board extends JPanel implements ActionListener {
 
     boolean gameOver = false;
 
-    MyKeyAdapter keyAdepter;
+    MyKeyAdapter keyAdapter;
 
     AudioStream audios = null;
     AudioStream audioEf = null;
@@ -118,7 +118,7 @@ public class Board extends JPanel implements ActionListener {
         matrix = new Tetrominoes[NUM_ROWS][NUM_COLS];
         initValues();
         timer = new Timer(deltaTime, this);
-        keyAdepter = new MyKeyAdapter();
+        keyAdapter = new MyKeyAdapter();
     }
 
     public void setNextPiecePanel(NextPiecePanel p) {
@@ -136,13 +136,13 @@ public class Board extends JPanel implements ActionListener {
 
     public void initGame() {
         AudioPlayer.player.stop(audios);
-        removeKeyListener(keyAdepter);
+        removeKeyListener(keyAdapter);
         initValues();
         timer.setDelay(deltaTime);
         nextPiecePanel.generateNewShape();
         currentShape = Shape.getRandomShape();
         timer.start();
-        addKeyListener(keyAdepter);
+        addKeyListener(keyAdapter);
         gameOver = false;
 
         playSong("tetris.wav");
