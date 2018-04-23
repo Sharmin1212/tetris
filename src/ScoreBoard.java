@@ -33,7 +33,7 @@ public class ScoreBoard extends JLabel {
     }
 
     public int getScore() {
-        return this.score;
+        return score;
     }
 
     public void paused() {

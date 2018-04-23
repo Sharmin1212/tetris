@@ -3,7 +3,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 import sun.audio.*;
@@ -80,6 +83,12 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    private JFrame parentFrame;
+
+    public void setParentFrame(JFrame parentFrame) {
+        this.parentFrame = parentFrame;
+    }
+    
     public ScoreBoard scoreBoard;
     private NextPiecePanel nextPiecePanel;
 
@@ -177,7 +186,10 @@ public class Board extends JPanel implements ActionListener {
             repaint();
         } else {
             if (currentShape.getYmin() + currentRow < 0) {
-                gameOver();
+                try {
+                    gameOver();
+                } catch (IOException ex) {
+                }
                 timer.stop();
             } else {
                 moveCurrentShapeToMatrix();
@@ -287,7 +299,7 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
-    public void gameOver() {
+    public void gameOver() throws IOException {
         for (int row = 0; row < NUM_ROWS; row++) {
             for (int col = 0; col < NUM_COLS; col++) {
                 matrix[row][col] = Tetrominoes.ZShape;
@@ -298,6 +310,8 @@ public class Board extends JPanel implements ActionListener {
             gameOver = true;
         }
         scoreBoard.gameOver();
+        RecordsDialog d = new RecordsDialog(parentFrame, true, scoreBoard.getScore());
+        d.setVisible(true);
 
     }
 }
