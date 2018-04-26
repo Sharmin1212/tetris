@@ -6,6 +6,7 @@ import java.awt.Graphics;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 /**
  *
  * @author alu20919409n
@@ -29,8 +30,8 @@ public class Shape {
         this.pieceShape = pieceShape;
         coordinates = new int[4][2];
         for (int point = 0; point < coordinates.length; point++) {
-            coordinates[point][0] = coordsTable[pieceShape.ordinal()][point][0];
-            coordinates[point][1] = coordsTable[pieceShape.ordinal()][point][1];
+                    coordinates[point][0] = coordsTable[pieceShape.ordinal()][point][0];
+                    coordinates[point][1] = coordsTable[pieceShape.ordinal()][point][1];
         }
     }
 
@@ -39,8 +40,8 @@ public class Shape {
         pieceShape = Tetrominoes.values()[randomNumber];
         coordinates = new int[4][2];
         for (int point = 0; point < coordinates.length; point++) {
-            coordinates[point][0] = coordsTable[randomNumber][point][0];
-            coordinates[point][1] = coordsTable[randomNumber][point][1];
+                    coordinates[point][0] = coordsTable[randomNumber][point][0];
+                    coordinates[point][1] = coordsTable[randomNumber][point][1];
         }
     }
 
@@ -110,5 +111,13 @@ public class Shape {
             }
         }
         return candidate;
+    }
+    
+    
+    public void draw(Graphics g, int row, int col, int squareWidth, int squareHeight) {
+        for (int point = 0; point <= 3; point++) {
+            Util.drawSquare(g, row + coordinates[point][1], col + coordinates[point][0], pieceShape, squareWidth, squareHeight);
+
+        }
     }
 }
