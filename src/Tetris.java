@@ -36,8 +36,6 @@ public class Tetris extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu3 = new javax.swing.JMenu();
         jMenuItemInitGame = new javax.swing.JMenuItem();
-        jMenu1 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(380, 564));
@@ -94,12 +92,6 @@ public class Tetris extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu3);
 
-        jMenu1.setText("File");
-        jMenuBar1.add(jMenu1);
-
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
-
         setJMenuBar(jMenuBar1);
 
         pack();
@@ -151,8 +143,6 @@ public class Tetris extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private Board board;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItemInitGame;
