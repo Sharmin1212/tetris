@@ -230,7 +230,7 @@ public class RecordsDialog extends javax.swing.JDialog {
                     lineCounter++;
                 }
             }
-            if(!alreadyWrittenScore){
+            if (!alreadyWrittenScore) {
                 output.println(score + ", " + jTextFieldName.getText());
             }
         } finally {

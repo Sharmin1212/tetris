@@ -52,7 +52,6 @@ public class NextPiecePanel extends JPanel {
         return getHeight() / NUM_ROWS_COLS;
     }
 
-   
     public void drawBorder(Graphics g) {
         g.setColor(Color.red);
         g.drawRect(0, 0, NUM_ROWS_COLS * squareWidth(), NUM_ROWS_COLS * squareHeight());

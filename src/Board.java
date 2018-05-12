@@ -88,7 +88,7 @@ public class Board extends JPanel implements ActionListener {
     public void setParentFrame(JFrame parentFrame) {
         this.parentFrame = parentFrame;
     }
-    
+
     public ScoreBoard scoreBoard;
     private NextPiecePanel nextPiecePanel;
 
@@ -300,18 +300,39 @@ public class Board extends JPanel implements ActionListener {
     }
 
     public void gameOver() throws IOException {
-        for (int row = 0; row < NUM_ROWS; row++) {
-            for (int col = 0; col < NUM_COLS; col++) {
-                matrix[row][col] = Tetrominoes.ZShape;
-            }
-            currentShape = null;
-            AudioPlayer.player.stop(audios);
-            playSong("GameOver.wav");
-            gameOver = true;
-        }
+
         scoreBoard.gameOver();
-        RecordsDialog d = new RecordsDialog(parentFrame, true, scoreBoard.getScore());
-        d.setVisible(true);
+        AudioPlayer.player.stop(audios);
+        playSong("GameOver.wav");
+        gameOver = true;
+        timer.stop();
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    for (int row = 0; row < NUM_ROWS; row++) {
+                        for (int col = 0; col < NUM_COLS; col++) {
+                            matrix[row][col] = Tetrominoes.ZShape;
+                            currentShape = null;
+                            repaint();
+
+                            try {
+                                Thread.sleep(20);
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    }
+                    RecordsDialog d = new RecordsDialog(parentFrame, true, scoreBoard.getScore());
+                    d.setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+        });
+
+        t.start();
 
     }
 }
